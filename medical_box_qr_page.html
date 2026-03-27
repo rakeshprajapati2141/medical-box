@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medical Box Guide</title>
+  <style>
+    :root {
+      --primary: #1f6f78;
+      --primary-soft: #e8f5f6;
+      --accent: #ffb703;
+      --danger: #b42318;
+      --danger-soft: #fff1f1;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --bg: #f6f8fb;
+      --border: #dbe3ea;
+      --success-soft: #eefbf3;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef6f7 0%, var(--bg) 180px);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+      background: rgba(246, 248, 251, 0.92);
+      border-bottom: 1px solid rgba(219, 227, 234, 0.9);
+    }
+
+    .topbar-inner {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      padding: 12px 16px;
+    }
+
+    .language-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 12px 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 46px;
+    }
+
+    .lang-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 6px 16px rgba(31, 111, 120, 0.25);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--primary), #2c8f95);
+      color: #fff;
+      border-radius: 24px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+      margin-top: 14px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 6px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 5vw, 34px);
+      line-height: 1.2;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(255,255,255,0.92);
+      font-size: 15px;
+    }
+
+    .notice {
+      margin-top: 16px;
+      background: var(--danger-soft);
+      border: 1px solid #f8c7c4;
+      color: #7a271a;
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .section-head {
+      margin: 22px 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .medicine-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .medicine-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .medicine-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .medicine-title-wrap {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .medicine-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--primary-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .medicine-card h3 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .medicine-subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tag {
+      background: #fff7e6;
+      color: #8a5a00;
+      border: 1px solid #f4d38a;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .info-item {
+      border: 1px solid #edf1f5;
+      background: #fbfcfd;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .info-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 3px;
+    }
+
+    .info-value {
+      font-size: 15px;
+    }
+
+    .footer-note {
+      margin: 18px 0 6px;
+      background: var(--success-soft);
+      border: 1px solid #cdebd6;
+      border-radius: var(--radius);
+      padding: 16px;
+      color: #14532d;
+      box-shadow: var(--shadow);
+    }
+
+    .footer-note strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .lang-content {
+      display: none;
+    }
+
+    .lang-content.active {
+      display: block;
+    }
+
+    @media (min-width: 700px) {
+      .medicine-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero {
+        padding: 28px 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .medicine-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .tag {
+        align-self: flex-start;
+      }
+
+      .lang-btn {
+        font-size: 13px;
+        padding: 11px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="language-tabs" role="tablist" aria-label="Language selector">
+        <button class="lang-btn active" id="btn-gu" onclick="setLanguage('gu')" aria-selected="true">ગુજરાતી</button>
+        <button class="lang-btn" id="btn-hi" onclick="setLanguage('hi')" aria-selected="false">हिन्दी</button>
+        <button class="lang-btn" id="btn-en" onclick="setLanguage('en')" aria-selected="false">English</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-badge">🏥 Family Use • QR Medical Guide</div>
+
+      <div class="lang-content active" data-lang="gu">
+        <h1>ઘર માટેની મેડિકલ બોક્સ માર્ગદર્શિકા</h1>
+        <p>આ બોક્સમાં રહેલી સામાન્ય દવાઓ, ક્રીમ અને લિક્વિડ કઈ સમસ્યામાં ઉપયોગી છે તેની સરળ માહિતી અહીં આપવામાં આવી છે.</p>
+      </div>
+
+      <div class="lang-content" data-lang="hi">
+        <h1>घर के मेडिकल बॉक्स की जानकारी</h1>
+        <p>इस बॉक्स में रखी सामान्य दवाइयाँ, क्रीम और लिक्विड किस काम आते हैं, इसकी आसान जानकारी यहाँ दी गई है।</p>
+      </div>
+
+      <div class="lang-content" data-lang="en">
+        <h1>Home Medical Box Guide</h1>
+        <p>This page explains which general medicines, creams, and liquids in the box are used for which purpose.</p>
+      </div>
+    </section>
+
+    <section class="notice">
+      <div class="lang-content active" data-lang="gu">
+        <strong>⚠️ મહત્વપૂર્ણ નોંધ</strong>
+        ગંભીર તકલીફ, એલર્જી, શ્વાસ લેવામાં તકલીફ, ભારે ઇજા, સતત તાવ, અથવા ડૉક્ટરની સલાહ જરૂરી હોય તેવી સ્થિતિમાં તરત ડૉક્ટરનો સંપર્ક કરો. આ માત્ર પ્રાથમિક મદદ માટેની માહિતી છે.
+      </div>
+
+      <div class="lang-content" data-lang="hi">
+        <strong>⚠️ महत्वपूर्ण सूचना</strong>
+        गंभीर समस्या, एलर्जी, साँस लेने में दिक्कत, गहरी चोट, लगातार बुखार, या डॉक्टर की आवश्यकता होने पर तुरंत डॉक्टर से संपर्क करें। यह केवल प्राथमिक सहायता के लिए जानकारी है।
+      </div>
+
+      <div class="lang-content" data-lang="en">
+        <strong>⚠️ Important Notice</strong>
+        For severe symptoms, allergy, breathing trouble, deep injury, continuous fever, or any urgent medical issue, contact a doctor immediately. This information is only for basic first aid support.
+      </div>
+    </section>
+
+    <div class="section-head">
+      <div>
+        <div class="lang-content active" data-lang="gu">
+          <h2>💊 બોક્સમાં રહેલી દવાઓ</h2>
+          <p>સામાન્ય ઉપયોગ માટે ઝડપી માર્ગદર્શન</p>
+        </div>
+        <div class="lang-content" data-lang="hi">
+          <h2>💊 बॉक्स में उपलब्ध दवाइयाँ</h2>
+          <p>सामान्य उपयोग के लिए त्वरित जानकारी</p>
+        </div>
+        <div class="lang-content" data-lang="en">
+          <h2>💊 Medicines Available in the Box</h2>
+          <p>Quick guidance for common use</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="medicine-grid">
+      <article class="medicine-card">
+        <div class="medicine-header">
+          <div class="medicine-title-wrap">
+            <div class="medicine-icon">🤒</div>
+            <div>
+              <h3>Paracetamol</h3>
+              <p class="medicine-subtitle">Tablet</p>
+            </div>
+          </div>
+          <div class="tag">Common Use</div>
+        </div>
+
+        <div class="lang-content active" data-lang="gu">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">ઉપયોગ</span><div class="info-value">તાવ, માથાનો દુખાવો, શરીરના સામાન્ય દુખાવા માટે.</div></div>
+            <div class="info-item"><span class="info-label">કેવી રીતે લેવાય</span><div class="info-value">જરૂર મુજબ 1 ગોળી. ખૂબ વારંવાર ન લેવાય.</div></div>
+            <div class="info-item"><span class="info-label">નોંધ</span><div class="info-value">વધુ ડોઝ ન લેવો. બાળકો અથવા ખાસ દર્દી માટે ડૉક્ટરની સલાહ લો.</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="hi">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">उपयोग</span><div class="info-value">बुखार, सिरदर्द और सामान्य शरीर दर्द में।</div></div>
+            <div class="info-item"><span class="info-label">कैसे लें</span><div class="info-value">ज़रूरत होने पर 1 गोली। बार-बार न लें।</div></div>
+            <div class="info-item"><span class="info-label">नोट</span><div class="info-value">अधिक मात्रा न लें। बच्चों या विशेष मरीज के लिए डॉक्टर की सलाह लें।</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="en">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">Use</span><div class="info-value">For fever, headache, and common body pain.</div></div>
+            <div class="info-item"><span class="info-label">How to use</span><div class="info-value">Take 1 tablet if needed. Do not take too frequently.</div></div>
+            <div class="info-item"><span class="info-label">Note</span><div class="info-value">Do not overdose. For children or special patients, consult a doctor.</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="medicine-card">
+        <div class="medicine-header">
+          <div class="medicine-title-wrap">
+            <div class="medicine-icon">🩹</div>
+            <div>
+              <h3>Antiseptic Cream</h3>
+              <p class="medicine-subtitle">Cream / Ointment</p>
+            </div>
+          </div>
+          <div class="tag">External Use</div>
+        </div>
+
+        <div class="lang-content active" data-lang="gu">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">ઉપયોગ</span><div class="info-value">નાની કટ, ખંજવાળ, અથવા હળવી ઇજા પર લગાવવા માટે.</div></div>
+            <div class="info-item"><span class="info-label">કેવી રીતે વાપરવી</span><div class="info-value">ઇજાગ્રસ્ત જગ્યા સાફ કરીને થોડી માત્રામાં લગાવો.</div></div>
+            <div class="info-item"><span class="info-label">નોંધ</span><div class="info-value">આંખ, મોઢું અથવા ઊંડી ઇજામાં ઉપયોગ ન કરો.</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="hi">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">उपयोग</span><div class="info-value">छोटी कट, खरोंच या हल्की चोट पर लगाने के लिए।</div></div>
+            <div class="info-item"><span class="info-label">कैसे लगाएं</span><div class="info-value">घाव वाली जगह साफ करके थोड़ी मात्रा में लगाएं।</div></div>
+            <div class="info-item"><span class="info-label">नोट</span><div class="info-value">आँख, मुँह या गहरे घाव पर उपयोग न करें।</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="en">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">Use</span><div class="info-value">For small cuts, scratches, and mild wounds.</div></div>
+            <div class="info-item"><span class="info-label">How to use</span><div class="info-value">Clean the affected area and apply a small amount.</div></div>
+            <div class="info-item"><span class="info-label">Note</span><div class="info-value">Do not use in eyes, mouth, or on deep wounds.</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="medicine-card">
+        <div class="medicine-header">
+          <div class="medicine-title-wrap">
+            <div class="medicine-icon">😷</div>
+            <div>
+              <h3>Cough Syrup</h3>
+              <p class="medicine-subtitle">Liquid</p>
+            </div>
+          </div>
+          <div class="tag">Liquid</div>
+        </div>
+
+        <div class="lang-content active" data-lang="gu">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">ઉપયોગ</span><div class="info-value">સામાન્ય ઉધરસ અથવા ગળાની અસ્વસ્થતા માટે.</div></div>
+            <div class="info-item"><span class="info-label">કેવી રીતે લેવાય</span><div class="info-value">માપના કપથી 5 ml અથવા લેબલ મુજબ લો.</div></div>
+            <div class="info-item"><span class="info-label">નોંધ</span><div class="info-value">બાળકો માટે અલગ ડોઝ હોઈ શકે. લેબલ જરૂર વાંચો.</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="hi">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">उपयोग</span><div class="info-value">सामान्य खांसी या गले की परेशानी में।</div></div>
+            <div class="info-item"><span class="info-label">कैसे लें</span><div class="info-value">माप वाले कप से 5 ml या लेबल के अनुसार लें।</div></div>
+            <div class="info-item"><span class="info-label">नोट</span><div class="info-value">बच्चों के लिए अलग मात्रा हो सकती है। लेबल अवश्य पढ़ें।</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="en">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">Use</span><div class="info-value">For common cough or throat discomfort.</div></div>
+            <div class="info-item"><span class="info-label">How to use</span><div class="info-value">Take 5 ml with the measuring cup or follow the bottle label.</div></div>
+            <div class="info-item"><span class="info-label">Note</span><div class="info-value">Children may need a different dosage. Always read the label.</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="medicine-card">
+        <div class="medicine-header">
+          <div class="medicine-title-wrap">
+            <div class="medicine-icon">💧</div>
+            <div>
+              <h3>ORS</h3>
+              <p class="medicine-subtitle">Oral Rehydration Solution</p>
+            </div>
+          </div>
+          <div class="tag">Hydration</div>
+        </div>
+
+        <div class="lang-content active" data-lang="gu">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">ઉપયોગ</span><div class="info-value">ડિહાઇડ્રેશન, ઊલટી, અથવા લૂઝ મોશનમાં શરીરમાં પાણીની ઉણપ માટે.</div></div>
+            <div class="info-item"><span class="info-label">કેવી રીતે લેવાય</span><div class="info-value">પેકેટ સૂચના મુજબ પાણીમાં મિક્સ કરીને ધીમે ધીમે પીવો.</div></div>
+            <div class="info-item"><span class="info-label">નોંધ</span><div class="info-value">તૈયાર કરેલું ORS લાંબા સમય સુધી રાખવું નહીં.</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="hi">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">उपयोग</span><div class="info-value">डिहाइड्रेशन, उल्टी या दस्त में शरीर में पानी की कमी के लिए।</div></div>
+            <div class="info-item"><span class="info-label">कैसे लें</span><div class="info-value">पैकेट के निर्देश के अनुसार पानी में घोलकर धीरे-धीरे पिएं।</div></div>
+            <div class="info-item"><span class="info-label">नोट</span><div class="info-value">बना हुआ ORS लंबे समय तक न रखें।</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="en">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">Use</span><div class="info-value">For dehydration due to vomiting, loose motion, or fluid loss.</div></div>
+            <div class="info-item"><span class="info-label">How to use</span><div class="info-value">Mix in water as per the packet instructions and drink slowly.</div></div>
+            <div class="info-item"><span class="info-label">Note</span><div class="info-value">Do not keep prepared ORS for too long.</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="medicine-card">
+        <div class="medicine-header">
+          <div class="medicine-title-wrap">
+            <div class="medicine-icon">🔥</div>
+            <div>
+              <h3>Burn Cream</h3>
+              <p class="medicine-subtitle">Cream</p>
+            </div>
+          </div>
+          <div class="tag">Skin Care</div>
+        </div>
+
+        <div class="lang-content active" data-lang="gu">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">ઉપયોગ</span><div class="info-value">હળવા બર્ન અથવા ગરમ વસ્તુથી થયેલી સપાટી ઈજા માટે.</div></div>
+            <div class="info-item"><span class="info-label">કેવી રીતે વાપરવી</span><div class="info-value">પહેલાં ઠંડા પાણીથી જગ્યા ઠારી પછી હળવેથી લગાવો.</div></div>
+            <div class="info-item"><span class="info-label">નોંધ</span><div class="info-value">મોટા બર્ન અથવા ફફોલા હોય તો તરત ડૉક્ટરને બતાવો.</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="hi">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">उपयोग</span><div class="info-value">हल्के जलने या गर्म चीज से हुई सतही चोट में।</div></div>
+            <div class="info-item"><span class="info-label">कैसे लगाएं</span><div class="info-value">पहले ठंडे पानी से जगह ठंडी करें, फिर हल्का लगाएं।</div></div>
+            <div class="info-item"><span class="info-label">नोट</span><div class="info-value">बड़ा जलना या फफोला होने पर तुरंत डॉक्टर को दिखाएं।</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="en">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">Use</span><div class="info-value">For minor burns or mild skin burns from hot surfaces.</div></div>
+            <div class="info-item"><span class="info-label">How to use</span><div class="info-value">Cool the area with water first, then apply gently.</div></div>
+            <div class="info-item"><span class="info-label">Note</span><div class="info-value">For major burns or blisters, seek medical help immediately.</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="medicine-card">
+        <div class="medicine-header">
+          <div class="medicine-title-wrap">
+            <div class="medicine-icon">🤧</div>
+            <div>
+              <h3>Cold Relief Tablets</h3>
+              <p class="medicine-subtitle">Tablet</p>
+            </div>
+          </div>
+          <div class="tag">Seasonal</div>
+        </div>
+
+        <div class="lang-content active" data-lang="gu">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">ઉપયોગ</span><div class="info-value">સર્દી, નાક બંધ, છીંક, અથવા સામાન્ય શરદી માટે.</div></div>
+            <div class="info-item"><span class="info-label">કેવી રીતે લેવાય</span><div class="info-value">લેબલ મુજબ અથવા જરૂર મુજબ 1 ગોળી લો.</div></div>
+            <div class="info-item"><span class="info-label">નોંધ</span><div class="info-value">કેટલીક દવાઓ ઉંઘ લાવી શકે છે. વાહન ચલાવતા પહેલાં ધ્યાન રાખો.</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="hi">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">उपयोग</span><div class="info-value">सर्दी, नाक बंद, छींक या सामान्य जुकाम में।</div></div>
+            <div class="info-item"><span class="info-label">कैसे लें</span><div class="info-value">लेबल के अनुसार या ज़रूरत होने पर 1 गोली लें।</div></div>
+            <div class="info-item"><span class="info-label">नोट</span><div class="info-value">कुछ दवाओं से नींद आ सकती है। वाहन चलाने से पहले सावधानी रखें।</div></div>
+          </div>
+        </div>
+
+        <div class="lang-content" data-lang="en">
+          <div class="info-list">
+            <div class="info-item"><span class="info-label">Use</span><div class="info-value">For cold, blocked nose, sneezing, and common seasonal symptoms.</div></div>
+            <div class="info-item"><span class="info-label">How to use</span><div class="info-value">Take 1 tablet as needed or follow the label directions.</div></div>
+            <div class="info-item"><span class="info-label">Note</span><div class="info-value">Some medicines may cause drowsiness. Be careful before driving.</div></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="footer-note">
+      <div class="lang-content active" data-lang="gu">
+        <strong>📌 મહત્વપૂર્ણ ઘરેલુ સૂચનાઓ</strong>
+        દવાઓ બાળકોની પહોંચથી દૂર રાખો. સમયાંતરે expiry date તપાસો. દરેક દવાના મૂળ પેકેટ અથવા લેબલ સાથે જ રાખો.
+      </div>
+      <div class="lang-content" data-lang="hi">
+        <strong>📌 जरूरी घरेलू निर्देश</strong>
+        दवाइयाँ बच्चों की पहुँच से दूर रखें। समय-समय पर expiry date जांचें। दवाइयों को उनके मूल पैक या लेबल के साथ रखें।
+      </div>
+      <div class="lang-content" data-lang="en">
+        <strong>📌 Important Home Instructions</strong>
+        Keep all medicines out of reach of children. Check expiry dates regularly. Store medicines with their original labels or packaging.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function setLanguage(lang) {
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+      });
+
+      var activeBtn = document.getElementById('btn-' + lang);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.setAttribute('aria-selected', 'true');
+      }
+
+      document.querySelectorAll('.lang-content').forEach(function(block) {
+        block.classList.remove('active');
+      });
+
+      document.querySelectorAll('.lang-content[data-lang="' + lang + '"]').forEach(function(block) {
+        block.classList.add('active');
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      setLanguage('gu');
+    });
+  </script>
+</body>
+</html>
